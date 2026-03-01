@@ -84,6 +84,7 @@ a:hover {
   margin-bottom: 16px;
   background: linear-gradient(135deg, var(--primary-hover) 0%, #ff8da1 100%);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
@@ -306,4 +307,31 @@ a:hover {
     left: 10px !important;
     right: auto !important;
   }
+}
+
+/* Floating Action Buttons */
+.floating-action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: none;
+  background: var(--card-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  color: var(--primary-hover);
+  box-shadow: 0 8px 32px rgba(252, 159, 175, 0.4);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 50;
+}
+
+.floating-action-btn:hover {
+  background: var(--primary-hover);
+  color: white;
+  transform: translateY(-5px);
+  box-shadow: 0 12px 40px rgba(252, 159, 175, 0.6);
 }

@@ -1,9 +1,9 @@
 'use client';
 
-import { motion, useScroll, useSpring, useTransform } from 'framer-motion';
-import { useRef } from 'react';
+import { motion, useScroll, useSpring, useTransform, useMotionValueEvent } from 'framer-motion';
+import { useRef, useState } from 'react';
 import Image from 'next/image';
-import { Video, PenTool, Layout, Truck, Mail, Facebook, Music, Film, Coffee, Sparkles, Star, Camera } from 'lucide-react';
+import { Video, PenTool, Layout, Truck, Mail, Facebook, Music, Film, Coffee, Sparkles, Star, Camera, Phone, ArrowUp } from 'lucide-react';
 
 const Cloud = ({ width, opacity }: { width: number, opacity: number }) => (
   <svg 
@@ -18,10 +18,23 @@ const Cloud = ({ width, opacity }: { width: number, opacity: number }) => (
 
 export default function Home() {
   const containerRef = useRef(null);
-  const { scrollYProgress } = useScroll({
+  const [showTopBtn, setShowTopBtn] = useState(false);
+  const { scrollYProgress, scrollY } = useScroll({
     target: containerRef,
     offset: ["start start", "end end"]
   });
+
+  useMotionValueEvent(scrollY, "change", (latest) => {
+    if (latest > 300) {
+      setShowTopBtn(true);
+    } else {
+      setShowTopBtn(false);
+    }
+  });
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
   
   const scaleY = useSpring(scrollYProgress, {
     stiffness: 100,
@@ -294,6 +307,26 @@ export default function Home() {
         </div>
         <p style={{ color: 'var(--text-light)' }}>0978 282 548 • Chung cư Sunview, Thủ Đức</p>
       </section>
+
+      {/* Floating Action Buttons */}
+      <div style={{ position: 'fixed', bottom: '30px', left: '30px', display: 'flex', flexDirection: 'column', gap: '16px', zIndex: 50 }}>
+        <a href="mailto:work@thaocute.io.vn" className="floating-action-btn" title="Gửi Email">
+          <Mail size={24} />
+        </a>
+        <a href="tel:0978282548" className="floating-action-btn" title="Gọi Điện Thoại">
+          <Phone size={24} />
+        </a>
+      </div>
+
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.5 }}
+        animate={{ opacity: showTopBtn ? 1 : 0, scale: showTopBtn ? 1 : 0.5 }}
+        style={{ position: 'fixed', bottom: '30px', right: '30px', zIndex: 50, pointerEvents: showTopBtn ? 'auto' : 'none' }}
+      >
+        <button onClick={scrollToTop} className="floating-action-btn" title="Lên Đầu Trang">
+          <ArrowUp size={24} />
+        </button>
+      </motion.div>
     </main>
   );
 }
