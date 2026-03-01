@@ -2,15 +2,37 @@
 
 import { motion, useScroll, useSpring, useTransform } from 'framer-motion';
 import { useRef } from 'react';
-import { Video, PenTool, Layout, Truck, Mail, Facebook, Music, Film, Coffee } from 'lucide-react';
+import Image from 'next/image';
+import { Video, PenTool, Layout, Truck, Mail, Facebook, Music, Film, Coffee, Sparkles, Star, Camera } from 'lucide-react';
+
+const Cloud = ({ width, opacity }: { width: number, opacity: number }) => (
+  <svg 
+    width={width} 
+    viewBox="0 0 512 512" 
+    xmlns="http://www.w3.org/2000/svg" 
+    style={{ opacity, filter: 'drop-shadow(0px 10px 15px rgba(0,0,0,0.05)) blur(1px)' }} 
+  >
+    <path fill="#ffffff" d="M404.7,185.3c-7.3-64.8-62.4-114.6-128.7-114.6c-49.3,0-92,27.1-113.8,68.2c-11.7-6.2-25.1-9.7-39.2-9.7 c-43.2,0-78.6,33.5-81.8,75.8C18.1,213.9,0,235.1,0,260.6c0,30.3,24.6,54.9,54.9,54.9h374.9c45.4,0,82.2-36.8,82.2-82.2 C512,190.2,462.6,185.3,404.7,185.3z"/>
+  </svg>
+);
 
 export default function Home() {
-  const { scrollYProgress } = useScroll();
+  const containerRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end end"]
+  });
+  
   const scaleY = useSpring(scrollYProgress, {
     stiffness: 100,
     damping: 30,
     restDelta: 0.001
   });
+
+  // Parallax Values
+  const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "40%"]);
+  const backgroundX = useTransform(scrollYProgress, [0, 1], ["0%", "-10%"]);
+  const characterY = useTransform(scrollYProgress, [0, 1], ["0%", "-20%"]);
 
   const timelineData = [
     {
@@ -74,23 +96,57 @@ export default function Home() {
   ];
 
   return (
-    <main>
-      <section className="container hero-section">
+    <main ref={containerRef}>
+      {/* Dynamic Parallax Sky Background Clouds */}
+      <motion.div 
+        style={{ 
+          y: backgroundY, 
+          x: backgroundX,
+          position: 'fixed', 
+          top: 0, 
+          left: 0, 
+          width: '100vw', 
+          height: '150vh', 
+          zIndex: -1,
+          pointerEvents: 'none'
+        }}
+      >
+        <div style={{ position: 'absolute', top: '10%', left: '5%' }}><Cloud width={200} opacity={0.6} /></div>
+        <div style={{ position: 'absolute', top: '25%', right: '10%' }}><Cloud width={300} opacity={0.6} /></div>
+        <div style={{ position: 'absolute', top: '45%', left: '-5%' }}><Cloud width={250} opacity={0.4} /></div>
+        <div style={{ position: 'absolute', top: '65%', right: '5%' }}><Cloud width={180} opacity={0.5} /></div>
+        <div style={{ position: 'absolute', top: '85%', left: '15%' }}><Cloud width={350} opacity={0.6} /></div>
+        <div style={{ position: 'absolute', top: '110%', right: '20%' }}><Cloud width={280} opacity={0.7} /></div>
+      </motion.div>
+
+      <section className="container hero-section" style={{ minHeight: '100vh', paddingTop: '80px', paddingBottom: '80px' }}>
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8 }}
           className="glass"
-          style={{ padding: '40px', maxWidth: '800px', width: '100%', margin: '0 auto' }}
+          style={{ padding: '60px 40px', maxWidth: '800px', width: '100%', margin: '0 auto', position: 'relative' }}
         >
+          {/* Logo & Headline */}
           <motion.div
             initial={{ y: -20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.2, duration: 0.8 }}
+            style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '24px' }}
           >
-            <h1 className="hero-title">Trần Thị Như Thảo</h1>
-            <h2 className="hero-subtitle">Content Creator / Video Editor</h2>
+            <div className="floating-icon" style={{ marginBottom: '20px' }}>
+              <Image 
+                src="/img-logo/logo-nt-creative.png" 
+                alt="Logo NT Creative" 
+                width={150} 
+                height={150} 
+                priority
+              />
+            </div>
+            <h1 className="hero-title" style={{ fontSize: '3rem', margin: 0 }}>Thảo cute Creative</h1>
+            <h2 className="hero-subtitle" style={{ marginTop: '8px' }}>Trần Thị Như Thảo • Content Creator</h2>
           </motion.div>
+
           <motion.p
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
@@ -102,10 +158,50 @@ export default function Home() {
             dung, quan tâm xu hướng mạng xã hội và luôn học hỏi để nâng cao kỹ
             năng truyền thông số.
           </motion.p>
+
+          {/* Character Image & Floating Icons */}
+          <motion.div 
+            style={{ y: characterY, position: 'relative', marginTop: '60px', height: '600px', display: 'flex', justifyContent: 'center' }}
+          >
+            <div style={{ position: 'relative', width: '100%', maxWidth: '500px', height: '100%' }}>
+              <Image 
+                src="/img-logo/nhu-thao-character.png" 
+                alt="Như Thảo Character" 
+                fill 
+                style={{ objectFit: 'contain', zIndex: 10 }} 
+              />
+              {/* Floating creative icons around the character */}
+              <div className="floating-icon delay-1" style={{ position: 'absolute', top: '10%', left: '-15%', color: 'var(--primary-hover)', zIndex: 11 }}>
+                <Sparkles size={40} />
+              </div>
+              <div className="floating-icon delay-2" style={{ position: 'absolute', top: '60%', right: '-10%', color: '#ffb3c1', zIndex: 11 }}>
+                <Video size={48} />
+              </div>
+              <div className="floating-icon delay-3" style={{ position: 'absolute', bottom: '-5%', left: '10%', color: 'var(--primary-hover)', zIndex: 11 }}>
+                <Star size={32} />
+              </div>
+              <div className="floating-icon" style={{ position: 'absolute', top: '-5%', right: '10%', color: '#ff8da1', zIndex: 11 }}>
+                <Camera size={36} />
+              </div>
+              
+              {/* Glow Effect behind Character */}
+              <div style={{
+                position: 'absolute', 
+                top: '50%', left: '50%', 
+                transform: 'translate(-50%, -50%)', 
+                width: '200px', height: '200px', 
+                background: 'rgba(255, 196, 203, 0.4)', 
+                filter: 'blur(50px)', 
+                borderRadius: '50%', 
+                zIndex: 0
+              }}></div>
+            </div>
+          </motion.div>
+
         </motion.div>
       </section>
 
-      <section className="container" style={{ padding: '40px 24px' }}>
+      <section className="container" style={{ padding: '80px 24px 40px' }}>
         <h2 style={{ textAlign: 'center', fontSize: '2rem', marginBottom: '20px' }}>Kỹ năng Chuyên Môn</h2>
         <div className="skills-grid">
           {skills.map((skill, index) => (
@@ -186,13 +282,13 @@ export default function Home() {
 
         <h2 style={{ marginBottom: '20px' }}>Kết Nối Với Thảo</h2>
         <div className="social-links">
-          <a href="mailto:Nhuthao0501@gmail.com" className="social-link" title="Email">
+          <a href="mailto:work@thaocute.io.vn" className="social-link" title="Email">
             <Mail size={24} />
           </a>
           <a href="https://thaocute.io.vn/" target="_blank" rel="noreferrer" className="social-link" title="Website">
             <Layout size={24} />
           </a>
-          <a href="#" className="social-link" title="Facebook">
+          <a href="https://www.facebook.com/NhuThao.1108" target="_blank" rel="noreferrer" className="social-link" title="Facebook">
             <Facebook size={24} />
           </a>
         </div>

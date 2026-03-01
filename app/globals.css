@@ -1,11 +1,11 @@
 :root {
   --primary: #ffc4cb;
   --primary-hover: #fc9faf;
-  --bg-color: #fdfdfd;
+  --bg-color: transparent;
   --text-dark: #333333;
   --text-light: #666666;
-  --card-bg: rgba(255, 255, 255, 0.75);
-  --glass-border: rgba(255, 196, 203, 0.5);
+  --card-bg: rgba(255, 255, 255, 0.4);
+  --glass-border: rgba(255, 196, 203, 0.6);
 }
 
 * {
@@ -16,11 +16,28 @@
 
 body {
   font-family: 'Inter', -apple-system, sans-serif;
-  background-color: var(--bg-color);
+  background: linear-gradient(180deg, #d4f0ff 0%, #aee0ff 30%, #56CCF2 100%);
+  background-attachment: fixed;
   color: var(--text-dark);
   line-height: 1.6;
   overflow-x: hidden;
 }
+
+/* Sky Parallax Background is now handled directly via React components/SVG clouds */
+
+@keyframes float {
+  0% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-15px) rotate(5deg); }
+  100% { transform: translateY(0px) rotate(0deg); }
+}
+
+.floating-icon {
+  animation: float 5s ease-in-out infinite;
+}
+.delay-1 { animation-delay: 1.5s; }
+.delay-2 { animation-delay: 3s; }
+.delay-3 { animation-delay: 4.5s; }
+
 
 h1, h2, h3, h4, strong {
   color: var(--primary-hover);
